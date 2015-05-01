@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename Java project &apos;Shapes_ehill1-current&apos; to &apos;Shapes_ehill1-ellipse-super&apos;&#x0A;- Original element: &apos;Shapes_ehill1-current&apos;&#x0A;- Renamed element: &apos;Shapes_ehill1-current&apos;&#x0A;- Update references to refactored element" description="Rename Java project &apos;Shapes_ehill1-current&apos;" flags="7" id="org.eclipse.jdt.ui.rename.java.project" input="=Shapes_ehill1-current" name="Shapes_ehill1-ellipse-super" references="true" stamp="1424442945150" version="1.0"/>
+</session>

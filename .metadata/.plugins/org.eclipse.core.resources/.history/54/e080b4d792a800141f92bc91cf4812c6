@@ -1,0 +1,27 @@
+/**
+ * HelloWorld.java
+ * @author Emily Hill
+ *
+ * This is a JavaDoc comment, which is used to 
+ * automatically generate Java API documentation like
+ * http://docs.oracle.com/javase/7/docs/api/java/io/PrintStream.html
+ * 
+ */
+public class HelloWorld {
+
+	/* This is a multi-line block comment.
+	 * The main method is where execution begins.
+	 * Every Java program needs only one main,
+	 * but it's a good habit to put one in every
+	 * class file for testing.
+	 */
+	public static void main(String[] args) {
+		// An inline comment
+		// Look how much more you need to print
+		// something in Java!
+		System.out.println("Hello, World!");
+		// In python, this program would simply be:
+		// print("Hello World")
+	}
+
+}

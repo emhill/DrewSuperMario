@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;basement&apos; in &apos;Game.createRooms()&apos; to &apos;cellar&apos;&#x0A;- Original project: &apos;ZuulBadOrig&apos;&#x0A;- Original element: &apos;Game.createRooms().basement&apos;&#x0A;- Renamed element: &apos;basement&apos;&#x0A;- Update references to refactored element" description="Rename local variable &apos;basement&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;{Game.java[Game~createRooms@basement!1023!1072!1064!1071!QRoom;!0!false" name="cellar" references="true" stamp="1428330676335" version="1.0"/>
+</session>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;HelloWorldGUI&apos; to &apos;Picture&apos;&#x0A;- Original project: &apos;Shapes_ehill1&apos;&#x0A;- Original element: &apos;HelloWorldGUI&apos;&#x0A;- Renamed element: &apos;Picture&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;HelloWorldGUI&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;{HelloWorldGUI.java[HelloWorldGUI" matchStrategy="1" name="Picture" qualified="false" references="true" similarDeclarations="false" stamp="1423062034191" textual="false" version="1.0"/>
+</session>

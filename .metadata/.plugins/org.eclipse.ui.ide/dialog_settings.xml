@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="CleanDialogSettings">
+		<item value="563" key="DIALOG_WIDTH"/>
+		<item value="false" key="TOGGLE_SELECTED"/>
+		<item value="370" key="DIALOG_HEIGHT"/>
+		<item value="537" key="DIALOG_X_ORIGIN"/>
+		<item value="151" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="ExternalProjectImportWizard">
+		<item value="true" key="WizardProjectsImportPage.STORE_NESTED_PROJECTS"/>
+		<item value="true" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
+		<item value="true" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
+		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value=""/>
+			<item value="/Users/emily/Downloads/CSCI151-C-30083201530-WOD3-83563"/>
+			<item value="/Users/emily/Dropbox/Teaching/151 OO/Grading/wod1"/>
+		</list>
+		<list key="WizardProjectsImportPage.STORE_ARCHIVES">
+			<item value="/Users/emily/Downloads/Hangman_yqiu(2).zip"/>
+			<item value="/Users/emily/Downloads/freemind-code-3508dbf68e1e309c1963a5f302dea7876fd9ab2d.zip"/>
+			<item value="/Users/emily/Downloads/jajuk-master.zip"/>
+			<item value="/Users/emily/Downloads/javamarioplatformer-261d9d0928a2.zip"/>
+			<item value="/Users/emily/Downloads/ShoppingCart1_afollett.zip"/>
+		</list>
+	</section>
+	<section name="WORKBENCH_SETTINGS">
+		<list key="ENABLED_TRANSFERS">
+		</list>
+	</section>
+	<section name="ChooseWorkspaceDialogSettings">
+		<item value="323" key="DIALOG_X_ORIGIN"/>
+		<item value="194" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

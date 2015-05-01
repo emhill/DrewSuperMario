@@ -1,0 +1,64 @@
+import java.util.ArrayList;
+
+/**
+ * The database class provides a facility to store CD and video 
+ * objects. A list of all CDs and videos can be printed to the
+ * terminal.
+ * 
+ * This version does not save the data to disk, and it does not
+ * provide any search functions.
+ * 
+ * @author Michael Kolling and David J. Barnes
+ * @version 2008.03.30
+ */
+public class Database
+{
+	private ArrayList<DoMEEntry> items;
+	//private ArrayList<DVD> dvds;
+
+	/**
+	 * Construct an empty Database.
+	 */
+	public Database()
+	{
+		items = new ArrayList<DoMEEntry>();
+		//dvds = new ArrayList<DVD>();
+	}
+
+	/**
+	 * Add a CD to the database.
+	 * @param theCD The CD to be added.
+	 */
+	public void addItem(Item i)
+	{
+		items.add(i);
+	}
+
+	/**
+	 * Print a list of all currently stored CDs and DVDs to the
+	 * text terminal.
+	 */
+	public void list()
+	{
+		// print list of CDs
+		for(DoMEEntry i : items) {
+			i.print();
+			System.out.println();   // empty line between items
+		}
+	}
+
+	public static void main(String args[]) {
+		Database db = new Database();
+		CD c = new CD("A Swingin' Affair", "Frank Sinatra", 16, 64);
+		CD d = new CD("Big Bad World", "Plain White T's", 10, 35);
+		DVD v = new DVD("O Brother, Where Art Thou?", "Joel & Ethan Coen", 106);
+		//Item i = new Item("Harry Potter", 120);
+		
+		db.addItem(c);
+		db.addItem(d);
+		db.addItem(v);
+		//db.addItem(i);
+
+		db.list();
+	}
+}
