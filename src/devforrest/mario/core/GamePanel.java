@@ -9,8 +9,10 @@ import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.sound.midi.Sequence;
@@ -43,6 +45,8 @@ public class GamePanel extends JPanel implements Runnable {
 	private int period = 20; 
 	
 	private Mario mario;
+	private String mapName;
+	private ArrayList<String> allMaps;
 	private TileMap map;
 	private TileMap backgroundMap;
 	private TileMap foregroundMap;
@@ -54,7 +58,12 @@ public class GamePanel extends JPanel implements Runnable {
 	private MarioSoundManager22050Hz SM_22050_Hz;
 	private MarioSoundManager10512Hz SM_10512_Hz;
 	
+	private String path = "maps/all_maps.txt";
+
+	
 	public GamePanel(int w, int h) {
+		
+		importMaps();
 		
 		this.panelWidth = w;
 		this.panelHeight = h;
@@ -63,33 +72,27 @@ public class GamePanel extends JPanel implements Runnable {
 		SM_10512_Hz = new MarioSoundManager10512Hz(new AudioFormat(10512, 8, 1, true, true));
  		mario = new Mario(SM_22050_Hz);
 		
-		try {
-			manager = new GameLoader();
-			renderer = new GameRenderer();
-			renderer.setBackground(ImageIO.read(new File("backgrounds/background2.png")));
-			map = manager.loadMap("maps/map2.txt", SM_22050_Hz); // use the ResourceManager to load the game map
-			//backgroundMap = manager.loadOtherMaps("backgroundMap.txt");
-			//foregroundMap = manager.loadOtherMaps("foregroundMap.txt");
-			map.setPlayer(mario); // set the games main player to mario
-		} catch (IOException e){
-			System.out.println("Invalid Map.");
-		}
+ 		loadMap();
+ 		
+//		nextMap();
+//		nextMap();
+//		nextMap();
+//		nextMap();
 		
 		player = new MidiPlayer();
 		Sequence sequence;
-		Random r = new Random();
-		int rNum = r.nextInt(4);
-		if(rNum == 0) {
-			sequence = player.getSequence("sounds/smwovr2.mid");
+		int i = allMaps.indexOf(mapName) % 4;
+		if(i == 1) {
+			sequence = player.getSequence("music/yi_garden.mid");
 	        player.play(sequence, true);
-		} else if(rNum == 1) {
-			sequence = player.getSequence("sounds/smwovr2.mid");
+		} else if(i == 2) {
+			sequence = player.getSequence("music/smwovr2.mid");
 	        player.play(sequence, true);
-		} else if(rNum == 2) {
-			sequence = player.getSequence("music/smb_hammerbros.mid");
+		} else if(i == 3) {
+			sequence = player.getSequence("music/yi_athletic.mid");
 	        player.play(sequence, true);
-		} else if(rNum == 3) {
-			sequence = player.getSequence("music/smrpg_nimbus1.mid");
+		} else {
+			sequence = player.getSequence("music/smwovr1.mid");
 	        player.play(sequence, true);
 		}
 		
@@ -97,6 +100,68 @@ public class GamePanel extends JPanel implements Runnable {
 		this.addKeyListener(new SpriteListener(mario));
 		this.addKeyListener(new GameListener());
 		this.setFocusable(true); 
+	}
+	
+	/**
+	 * Loads the map for Mario to play in
+	 */	
+	private void loadMap() {
+		try {
+			manager = new GameLoader();
+			renderer = new GameRenderer();
+			renderer.setBackground(ImageIO.read(new File("backgrounds/background2.png")));
+			map = manager.loadMap("maps/" + mapName, SM_22050_Hz); // use the ResourceManager to load the game map
+			//backgroundMap = manager.loadOtherMaps("backgroundMap.txt");
+			//foregroundMap = manager.loadOtherMaps("foregroundMap.txt");
+			map.setPlayer(mario); // set the game's main player to mario
+		} catch (IOException e){
+			System.out.println("Invalid Map.");
+		}
+	}
+	
+	/**
+	 * Loads a txt file that contains the string names of all maps and adds to the allMaps
+	 * parameter. Will be used for getting the next map in sequence
+	 */
+	public void importMaps() {
+		Scanner reader;
+		allMaps = new ArrayList<String>();
+		try {
+			reader = new Scanner(new File(path));
+			while(reader.hasNextLine()) {
+				allMaps.add(reader.nextLine());
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		mapName = allMaps.get(0);
+	}
+	
+	/**
+	 * Getter that returns the name of the current map, to be used for the path to load the
+	 * current map
+	 */
+	public String getCurrMap() {
+		return mapName;
+	}
+	
+	/**
+	 * Returns the next map in the array list when level is won. If there are no more maps,
+	 * then the game has been won and the game end should be played
+	 */
+	public void nextMap() {
+		int i = allMaps.indexOf(mapName);
+		
+		if((i + 1) >= allMaps.size()) {
+			// Play the victory fanfare
+			System.out.println("Congratulation! You have won the game.");
+		} else if(i >= 0) {
+			mapName = allMaps.get(i + 1);
+			loadMap();
+		} else {
+			System.out.println("Sorry! The map doesn't exist.");
+		}
 	}
 	
 	/**
