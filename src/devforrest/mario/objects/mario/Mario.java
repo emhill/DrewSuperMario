@@ -70,8 +70,9 @@ public class Mario extends CollidableObject{
 	private static final float START_RUN_ANIM_THRESHOLD = .2f;
 	private static final float RUNNING_DX_INC = .001f;
 	private static final float TERMINAL_FALL_DY = .22f;
-	private static final int STARTING_LIFE = 1;
+	private static final int STARTING_LIFE = 3;
 	private static final int ANIM_TIME = 125;
+	private static final int STARTING_SCORE = 0;
 	
 	/* INITIAL_JUMP_HEIGHT + dx*JUMP_MULTIPLIER */
 	private float jumpHeight; 
@@ -89,7 +90,7 @@ public class Mario extends CollidableObject{
 	private Animation walkLeft, runLeft, stillLeft, jumpLeft, crouchLeft, changeLeft, currLeftAnim;
 	private Animation walkRight, runRight, 
 	stillRight, jumpRight, crouchRight, changeRight, currRightAnim;
-	
+	private int score;
 	private int health;
 	private int grace;
 	private Platform platform;
@@ -100,6 +101,7 @@ public class Mario extends CollidableObject{
 		super(STARTING_X, STARTING_Y, soundManager);
 		
 		setIsJumping(true);
+		score = STARTING_SCORE;
 		dy = STARTING_DY;
 		jumpHeight = INITIAL_JUMP_HEIGHT;
 		health = STARTING_LIFE;
@@ -143,7 +145,9 @@ public class Mario extends CollidableObject{
 	public boolean isInvisible() {
 		return isInvisible;
 	}
-	
+	public int getScore(){
+		return score;
+	}
 	public boolean isOnSlopedTile() { return onSlopedTile; }
 
 	public void setIsJumping(boolean isJumping) { this.isJumping = isJumping; }
@@ -479,26 +483,29 @@ public class Mario extends CollidableObject{
 					creature.kill();
 					soundManager.playCoin();
 					map.creaturesToAdd().add(new Score(Math.round(creature.getX()), Math.round(creature.getY()+13)));
-					
+					score += 100;
 				} else if(creature instanceof Mushroom) {
 					soundManager2.playCelebrate();
 					creature.kill();
-					if(health == 3) {
+					if(health >= 3) {
 					soundManager.playBonusPoints();
 					map.creaturesToAdd().add(new Score(Math.round(creature.getX()), Math.round(creature.getY()+13)));
 					} else {
 						soundManager.playHealthUp();
 						health++;
+						score += 100;
 					}	
 				} else if(creature instanceof Goomba && isJumping() && getdY() > 0) {
 					((Goomba) creature).jumpedOn(); // kill goomba
 					this.creatureHop();
 					soundManager.playKick();
+					score += 100;
 					
 				} else if(creature instanceof RedKoopa && isJumping() && getdY() > 0) {
 					((RedKoopa) creature).jumpedOn();
 					creatureHop();
 					soundManager.playKick();
+					score += 1000;
 					map.creaturesToAdd().add(new RedShell(Math.round(creature.getX()), 
 							Math.round(creature.getY()+13), map, soundManager, true));
 				} else if(creature instanceof RedShell) {
