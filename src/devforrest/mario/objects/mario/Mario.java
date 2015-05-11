@@ -85,10 +85,21 @@ public class Mario extends CollidableObject{
 	/* Boolean variables used to identify the state of Mario. */
 	private boolean isJumping, frictionLock, isInvisible;
 	
+	
+	//Another Boolean necessary for deciding whether or not Mario currently has the mushroom.
+	private boolean withMushroom;
+	
 	/* Animation variables. */
 	private Animation walkLeft, runLeft, stillLeft, jumpLeft, crouchLeft, changeLeft, currLeftAnim;
 	private Animation walkRight, runRight, 
 	stillRight, jumpRight, crouchRight, changeRight, currRightAnim;
+	
+	
+	//We first needed to add the necessary fields.
+	
+	private Animation smallWalkLeft, smallRunLeft, smallStillLeft, smallJumpLeft, smallChangeLeft, smallCurrLeftAnim;
+	private Animation smallWalkRight, smallRunRight, 
+	smallStillRight, smallJumpRight, smallChangeRight, smallCurrRightAnim;
 	
 	private int health;
 	private int grace;
@@ -100,6 +111,13 @@ public class Mario extends CollidableObject{
 		super(STARTING_X, STARTING_Y, soundManager);
 		
 		setIsJumping(true);
+		
+		//here's where you decide he's starting small!
+		//can't start with a mushroom, initializing here.
+		withMushroom = false;
+		
+		
+		
 		dy = STARTING_DY;
 		jumpHeight = INITIAL_JUMP_HEIGHT;
 		health = STARTING_LIFE;
@@ -109,6 +127,7 @@ public class Mario extends CollidableObject{
 				ImageManipulator.loadImage("mario/Mario_Big_Left_2.png"), ImageManipulator.loadImage("mario/Mario_Big_Left_Run_1.png"),
 				ImageManipulator.loadImage("mario/Mario_Big_Left_Run_2.png"), ImageManipulator.loadImage("mario/Mario_Big_Crouch_Left.png"),
 				ImageManipulator.loadImage("mario/Mario_Big_Jump_Left.png"), ImageManipulator.loadImage("mario/Mario_Big_Change_Direction_Left.png") };
+		
 		
 		BufferedImage[] r = { null, null, null, null, null, null, null, null };
 		for(int i = 0; i < l.length; i++) {
@@ -131,9 +150,45 @@ public class Mario extends CollidableObject{
 		jumpRight = new Animation(ANIM_TIME).addFrame(r[6]);
 		changeRight = new Animation(ANIM_TIME).addFrame(r[7]);
 		
-		setAnimation(stillRight);
-		currLeftAnim = walkLeft;
-		currRightAnim = walkRight;
+		
+		//Here we will create animations, both right  and left for a small Mario!
+		//WE'll begin by copying the code above for the big Mario to have the small 
+		//and all it's images be inside an array of Mario images.
+		
+		//Also, as a side note, walking and running are made to look the same!
+		//whoever is working on that will probably just fix the speed but they'll look similar
+		BufferedImage[] s = { ImageManipulator.loadImage("mario/Mario_small_rightStanding.png"), ImageManipulator.loadImage("mario/Mario_small_right1.png"),
+				ImageManipulator.loadImage("mario/Mario_small_right_run2.png"), ImageManipulator.loadImage("mario/Mario_small_right_run1.png"),
+				ImageManipulator.loadImage("mario/Mario_small_right_run2.png"),
+				ImageManipulator.loadImage("mario/Mario_small_jump_right.png"), ImageManipulator.loadImage("mario/Mario_small_change_direction_right.png") };
+		
+		//flipping the images just like above
+		BufferedImage[] t = { null, null, null, null, null, null, null, null };
+		for(int i = 0; i < s.length; i++) {
+			t[i] = ImageManipulator.horizontalFlip(s[i]); // Flip every image in l.
+		}
+		
+		
+		
+		//Create left animations for small Mario
+		// Create left animations.
+    	smallStillLeft = new Animation(ANIM_TIME).addFrame(t[0]);
+		smallWalkLeft = new Animation(ANIM_TIME).addFrame(t[1]).addFrame(t[2]);
+		smallRunLeft = new Animation(ANIM_TIME - 30).addFrame(t[3]).addFrame(t[4]);
+		smallJumpLeft = new Animation(ANIM_TIME).addFrame(t[5]);
+		smallChangeLeft = new Animation(ANIM_TIME).addFrame(t[6]);
+		
+		// Create right animations.
+		smallStillRight = new Animation(ANIM_TIME).addFrame(s[0]);
+		smallWalkRight = new Animation(ANIM_TIME).addFrame(s[1]).addFrame(s[2]);
+		smallRunRight = new Animation(ANIM_TIME - 30).addFrame(s[3]).addFrame(s[4]);
+		smallJumpRight = new Animation(ANIM_TIME).addFrame(s[5]);
+		smallChangeRight = new Animation(ANIM_TIME).addFrame(s[6]);
+		
+		
+		setAnimation(smallStillRight);
+		currLeftAnim = smallWalkLeft;
+		currRightAnim = smallWalkRight;
 	}
 	
 	public int getHealth() {
@@ -475,6 +530,9 @@ public class Mario extends CollidableObject{
 			boolean collision = isCollision(this, creature);
 			if(collision && !(creature instanceof Score)) {
 			
+				
+			//may need to find more places to make withMushroom true/false, going to come back to here though.
+				
 				if(creature instanceof Coin) {
 					creature.kill();
 					soundManager.playCoin();
@@ -483,6 +541,15 @@ public class Mario extends CollidableObject{
 				} else if(creature instanceof Mushroom) {
 					soundManager2.playCelebrate();
 					creature.kill();
+					
+					//here's where the mushroom goes down!!!
+					withMushroom = true;
+					
+					setAnimation(stillRight);
+					
+					System.out.println("Got It!!!! Got the Mushroom");
+					
+					
 					if(health == 3) {
 					soundManager.playBonusPoints();
 					map.creaturesToAdd().add(new Score(Math.round(creature.getX()), Math.round(creature.getY()+13)));
@@ -520,15 +587,42 @@ public class Mario extends CollidableObject{
 						}
 					} else if(!isJumping()){
 						getsDamaged();
+						
+						//mushroom goes away!
+						//withMushroom = false;
+						
 					}
 				} else {
 					getsDamaged();
+					
+					//mushroom goes away!
+					//withMushroom = false;
 				}
 			}
 		}
 	}
 	
 	public void getsDamaged() {
+
+		//when he gets damaged, the mushroom should no longer be present!
+		withMushroom = false;
+		
+		//the animation should also be set to small when mario gets damaged, 
+		//because he should only be big until he gets damaged.
+		//setAnimation(smallStillRight);
+		
+		if(currentAnimation() == currLeftAnim || currentAnimation() == smallStillLeft || currentAnimation() == smallChangeRight) {
+			setAnimation(smallWalkLeft);
+		}
+		if(currentAnimation() == currRightAnim || currentAnimation() == smallStillRight || currentAnimation() == smallChangeLeft) {
+			setAnimation(smallWalkRight);
+		}
+		
+		
+		//just to check to see if the methods are working
+		System.out.println("HE'S BEEN HIT");
+
+		
 		if(grace == 0) {
 			health--;
 			if(health <= 0) {
@@ -556,42 +650,90 @@ public class Mario extends CollidableObject{
 	}
 	
 	public void toggleMovement(int type) {
-
-		if(type == 1) {
-			currLeftAnim = walkLeft;
-			currRightAnim = walkRight;
+		
+		if(withMushroom == false){
+			if(type == 1) {
+				currLeftAnim = smallWalkLeft;
+				currRightAnim = smallWalkRight;
+			}
+			if(type == 2) {
+				currLeftAnim = smallRunLeft;
+				currRightAnim = smallRunRight;
+			}
+			if(type == 3) {
+				currLeftAnim = smallStillLeft;
+				currRightAnim = smallStillRight;
+			}
 		}
-		if(type == 2) {
-			currLeftAnim = runLeft;
-			currRightAnim = runRight;
-		}
-		if(type == 3) {
-			currLeftAnim = stillLeft;
-			currRightAnim = stillRight;
+		
+		
+		if(withMushroom == true){
+			if(type == 1) {
+				currLeftAnim = walkLeft;
+				currRightAnim = walkRight;
+			}
+			if(type == 2) {
+				currLeftAnim = runLeft;
+				currRightAnim = runRight;
+			}
+			if(type == 3) {
+				currLeftAnim = stillLeft;
+				currRightAnim = stillRight;
+			}
 		}
 	}
 
 	public void fixJumping() {
-		if(!isRightHeld && !isLeftHeld) {
-			if(currentAnimation() == jumpLeft) {
-				setAnimation(stillLeft);
-			}
-			if(currentAnimation() == jumpRight) {
-				setAnimation(stillRight);
-			}
-		} else {
-			if(!this.frictionLock) {
-				if(isRightHeld) {
-					setAnimation(currRightAnim);
-				} else if (isLeftHeld) {
-					setAnimation(currLeftAnim);
+		
+		if (withMushroom == false){
+			if(!isRightHeld && !isLeftHeld) {
+				if(currentAnimation() == smallJumpLeft) {
+					setAnimation(smallStillLeft);
+				}
+				if(currentAnimation() == smallJumpRight) {
+					setAnimation(smallStillRight);
 				}
 			} else {
-				//System.out.println("Do I ever get here");
-				if(isRightHeld) {
-					setAnimation(changeLeft);
-				} else if (isLeftHeld) {
-					setAnimation(changeRight);
+				if(!this.frictionLock) {
+					if(isRightHeld) {
+						setAnimation(currRightAnim);
+					} else if (isLeftHeld) {
+						setAnimation(currLeftAnim);
+					}
+				} else {
+					//System.out.println("Do I ever get here");
+					if(isRightHeld) {
+						setAnimation(smallChangeLeft);
+					} else if (isLeftHeld) {
+						setAnimation(smallChangeRight);
+					}
+				}
+			}
+		}
+		
+		
+		if (withMushroom == true){
+			if(!isRightHeld && !isLeftHeld) {
+				if(currentAnimation() == jumpLeft) {
+					setAnimation(stillLeft);
+				}
+				if(currentAnimation() == jumpRight) {
+					setAnimation(stillRight);
+				}
+			} else {
+				if(!this.frictionLock) {
+					if(isRightHeld) {
+						setAnimation(currRightAnim);
+					} else if (isLeftHeld) {
+						setAnimation(currLeftAnim);
+					}
+				} else {
+					//System.out.println("Do I ever get here");
+					if(isRightHeld) {
+						setAnimation(changeLeft);
+					} else if (isLeftHeld) {
+						setAnimation(changeRight);
+					}
 				}
 			}
 		}
@@ -599,12 +741,24 @@ public class Mario extends CollidableObject{
 	
 	public void jump() {
 		setIsJumping(true);
-    	if(currentAnimation() == currLeftAnim || currentAnimation() == stillLeft || currentAnimation() == changeRight) {
-    		setAnimation(jumpLeft);
-    	}
-    	if(currentAnimation() == currRightAnim || currentAnimation() == stillRight || currentAnimation() == changeLeft) {
-    		setAnimation(jumpRight);
-    	}
+		
+		if(withMushroom == false){
+			if(currentAnimation() == currLeftAnim || currentAnimation() == smallStillLeft || currentAnimation() == smallChangeRight) {
+				setAnimation(smallJumpLeft);
+			}
+			if(currentAnimation() == currRightAnim || currentAnimation() == smallStillRight || currentAnimation() == smallChangeLeft) {
+				setAnimation(smallJumpRight);
+			}
+		}
+		
+		if(withMushroom == true){
+			if(currentAnimation() == currLeftAnim || currentAnimation() == stillLeft || currentAnimation() == changeRight) {
+				setAnimation(jumpLeft);
+			}
+			if(currentAnimation() == currRightAnim || currentAnimation() == stillRight || currentAnimation() == changeLeft) {
+				setAnimation(jumpRight);
+			}
+		}
 	}
 
     public void keyPressed(KeyEvent e) {
@@ -613,14 +767,28 @@ public class Mario extends CollidableObject{
         if (key == KeyEvent.VK_LEFT) {
     		isLeftHeld = true;
     		if(!isDownHeld) {
-    			setAnimation(currLeftAnim);
+    			if (withMushroom == true){
+        			setAnimation(walkLeft);
+        		}
+        		if (withMushroom == false){
+        			setAnimation(smallWalkLeft);
+        		}
+//    			setAnimation(currLeftAnim);
     		}
         }
 
         if(key == KeyEvent.VK_RIGHT) {
     		isRightHeld = true;
     		if(!isDownHeld) {
-    			setAnimation(currRightAnim);
+    			if (withMushroom == true){
+        			setAnimation(walkRight);
+        			System.out.println("CHANGE 1");
+        		}
+        		if (withMushroom == false){
+        			setAnimation(smallWalkRight);
+        			System.out.println("CHANGE 2");
+        		}
+//    			setAnimation(currRightAnim);
     		}
         }
         
@@ -631,11 +799,13 @@ public class Mario extends CollidableObject{
         
         if(key == KeyEvent.VK_DOWN) {
         	isDownHeld = true;
-        	if(currentAnimation() == currLeftAnim || currentAnimation() == stillLeft || currentAnimation() == crouchLeft) {
-        		setAnimation(crouchLeft);
-        	}
-        	if(currentAnimation() == currRightAnim || currentAnimation() == stillRight || currentAnimation() == crouchRight) {
-        		setAnimation(crouchRight);
+        	if (withMushroom == true){
+        		if(currentAnimation() == currLeftAnim || currentAnimation() == stillLeft || currentAnimation() == crouchLeft) {
+        			setAnimation(crouchLeft);
+        		}
+        		if(currentAnimation() == currRightAnim || currentAnimation() == stillRight || currentAnimation() == crouchRight) {
+        			setAnimation(crouchRight);
+        		}
         	}
         }
         
@@ -656,7 +826,12 @@ public class Mario extends CollidableObject{
         if (key == KeyEvent.VK_LEFT) {
         	isLeftHeld = false;
         	if(!isJumping) {
-        		setAnimation(stillLeft);
+        		if (withMushroom == true){
+        			setAnimation(stillLeft);
+        		}
+        		if (withMushroom == false){
+        			setAnimation(smallStillLeft);
+        		}
         	}
         	
         }
@@ -664,7 +839,14 @@ public class Mario extends CollidableObject{
         if(key == KeyEvent.VK_RIGHT) {
         	isRightHeld = false;
         	if(!isJumping) {
-        		setAnimation(stillRight);
+        		if (withMushroom == true){
+        			setAnimation(stillRight);
+        			System.out.println("CHANGE 3");
+        		}
+        		if (withMushroom == false){
+        			setAnimation(smallStillRight);
+        			System.out.println("CHANGE 4");
+        		}
         	}
         }
         
@@ -675,16 +857,26 @@ public class Mario extends CollidableObject{
         // responsible for jumps of different heights
         if(key == KeyEvent.VK_SPACE) {
         	isSpaceHeld = false;
+        	isJumping = false;
+//        	if (withMushroom == true){
+//    			setAnimation(stillRight);
+//    		}
+//        	
+//    		if (withMushroom == false){
+//    			setAnimation(smallStillRight);
+//    		}
         	dy = this.getdY()/2.5f;
         }
 
         if(key == KeyEvent.VK_DOWN) {
         	isDownHeld = false;
-        	if (currentAnimation() == crouchLeft || currentAnimation() == currLeftAnim || currentAnimation() == changeLeft) {
-        		setAnimation(stillLeft);
-        	} 
-        	if (currentAnimation() == crouchRight || currentAnimation() == currRightAnim || currentAnimation() == changeRight) {
-        		setAnimation(stillRight);
+        	if(withMushroom == true){
+        		if (currentAnimation() == crouchLeft || currentAnimation() == currLeftAnim || currentAnimation() == changeLeft) {
+        			setAnimation(stillLeft);
+        		} 
+        		if (currentAnimation() == crouchRight || currentAnimation() == currRightAnim || currentAnimation() == changeRight) {
+        			setAnimation(stillRight);
+        		}
         	}
         }
     }
