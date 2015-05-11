@@ -29,6 +29,9 @@ import devforrest.mario.objects.creatures.Score;
 import devforrest.mario.util.ImageManipulator;
 
 
+
+
+
 /**
  * Mario is the main object in the game and is the center of the screen and attention at all
  * time. As a result, he is also the most complicated object in terms of animation, collision detection,
@@ -69,8 +72,6 @@ public class Mario extends CollidableObject{
 	private static final float TERMINAL_FALL_DY = .22f;
 	private static final int STARTING_LIFE = 1;
 	private static final int ANIM_TIME = 125;
-	
-	protected int coins = 0;
 	
 	/* INITIAL_JUMP_HEIGHT + dx*JUMP_MULTIPLIER */
 	private float jumpHeight; 
@@ -478,7 +479,6 @@ public class Mario extends CollidableObject{
 					creature.kill();
 					soundManager.playCoin();
 					map.creaturesToAdd().add(new Score(Math.round(creature.getX()), Math.round(creature.getY()+13)));
-					coins++; // Adds one to coin count 
 					
 				} else if(creature instanceof Mushroom) {
 					soundManager2.playCelebrate();
@@ -526,10 +526,6 @@ public class Mario extends CollidableObject{
 				}
 			}
 		}
-	}
-	
-	public int getCoins() { // Added method to get coins ref:ZX88433
-		return coins;
 	}
 	
 	public void getsDamaged() {
