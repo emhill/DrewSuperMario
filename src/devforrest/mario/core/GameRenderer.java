@@ -243,7 +243,8 @@ public class GameRenderer {
         
         float dd2dec = new Float(df2.format(player.getdX())).floatValue();
 
-        g.drawString("dx: " + dd2dec, 300, 17);
+      //dd2dec
+        g.drawString("Score: " +player.getScore(), 300, 17);
        
         if(lastLife != player.getHealth()); {
 	        lastLife = player.getHealth();
