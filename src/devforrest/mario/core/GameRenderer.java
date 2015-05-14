@@ -31,7 +31,7 @@ public class GameRenderer {
 	private ArrayList<TileMap> maps = new ArrayList<TileMap>();
 	private int lastLife = -5;
 	private DecimalFormat df2 = new DecimalFormat("#,###,###,##0.00");
-
+	private long startTime = System.currentTimeMillis();
 	// the size in bits of the tile
     private static final int TILE_SIZE = 16;
     // Math.pow(2, TILE_SIZE_BITS) == TILE_SIZE
@@ -242,8 +242,9 @@ public class GameRenderer {
         }
         
         float dd2dec = new Float(df2.format(player.getdX())).floatValue();
-
-        g.drawString("dx: " + dd2dec, 300, 17);
+        long millis =((startTime - System.currentTimeMillis()) /1000) + 300;
+        
+        g.drawString("Time: " + millis, 300, 17);
        
         if(lastLife != player.getHealth()); {
 	        lastLife = player.getHealth();
