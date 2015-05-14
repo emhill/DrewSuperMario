@@ -8,6 +8,9 @@ import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+
 import devforrest.mario.core.animation.Sprite;
 import devforrest.mario.core.tile.GameTile;
 import devforrest.mario.core.tile.Tile;
@@ -242,10 +245,20 @@ public class GameRenderer {
         }
         
         float dd2dec = new Float(df2.format(player.getdX())).floatValue();
+
         long millis =((startTime - System.currentTimeMillis()) /1000) + 300;
         
         g.drawString("Time: " + millis, 300, 17);
        
+
+
+      //  g.drawString("dx: " + dd2dec, 300, 17);
+        g.setColor(Color.YELLOW);
+        g.fillOval(118, 5, 12, 12); // This creates the 'coin' next to the counter
+        g.setColor(Color.BLACK);
+        g.drawString(""+player.getCoins(), 135, 17); // This gets the player's coin count and updates a the drawn string accordingly
+        
+
         if(lastLife != player.getHealth()); {
 	        lastLife = player.getHealth();
         	Color myColor = new Color(50, 50, 50, 50);

@@ -26,10 +26,8 @@ import devforrest.mario.objects.creatures.Platform;
 import devforrest.mario.objects.creatures.RedKoopa;
 import devforrest.mario.objects.creatures.RedShell;
 import devforrest.mario.objects.creatures.Score;
+import devforrest.mario.objects.tiles.QuestionBlock;
 import devforrest.mario.util.ImageManipulator;
-
-
-
 
 
 /**
@@ -72,6 +70,9 @@ public class Mario extends CollidableObject{
 	private static final float TERMINAL_FALL_DY = .22f;
 	private static final int STARTING_LIFE = 1;
 	private static final int ANIM_TIME = 125;
+	// FINDCOIN
+	private int coins = 0;
+	// private int score = 0;
 	
 	/* INITIAL_JUMP_HEIGHT + dx*JUMP_MULTIPLIER */
 	private float jumpHeight; 
@@ -433,6 +434,7 @@ public class Mario extends CollidableObject{
 					for(Point p : yTile) {
 						GameTile tile = map.getTile(p.x, p.y);
 						if(tile != null) { tile.doAction(); }
+						this.setCoins(this.getCoins()+1);;
 					}
 					setY(GameRenderer.tilesToPixels(ytp.y + 1));
 					soundManager.playBump();
@@ -474,11 +476,12 @@ public class Mario extends CollidableObject{
 		if(!creature.isPlatform() && creature.isCollidable()) { 
 			boolean collision = isCollision(this, creature);
 			if(collision && !(creature instanceof Score)) {
-			
+				
 				if(creature instanceof Coin) {
 					creature.kill();
 					soundManager.playCoin();
 					map.creaturesToAdd().add(new Score(Math.round(creature.getX()), Math.round(creature.getY()+13)));
+					coins++; // Adds one to coin count 
 					
 				} else if(creature instanceof Mushroom) {
 					soundManager2.playCelebrate();
@@ -528,6 +531,22 @@ public class Mario extends CollidableObject{
 		}
 	}
 	
+	public int getCoins() { // Added method to get coins ref:ZX88433
+		return coins;
+	}
+	
+	public void setCoins(int c) { // Added method to set coins ref:ZX88433
+		coins = c;
+	}
+	/*
+	public int getScore() {
+		return score;
+	}
+	
+	public void setScore(int s) {
+		score = s;
+	}
+	*/
 	public void getsDamaged() {
 		if(grace == 0) {
 			health--;

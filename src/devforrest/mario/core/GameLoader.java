@@ -25,7 +25,6 @@ import devforrest.mario.objects.tiles.SlopedTile;
 import devforrest.mario.util.SpriteMap;
 
 
-
 public class GameLoader {
 	
 	private ArrayList<BufferedImage> plain;
@@ -60,50 +59,6 @@ public class GameLoader {
 	// BufferedImage -> Image
 	public static Image toImage(BufferedImage bufferedImage) {
 	    return Toolkit.getDefaultToolkit().createImage(bufferedImage.getSource());
-	}
-
-	// loads a tile map, given a map to load..
-    // use this to load the background and foreground. Note: the status of the tiles (ie collide etc)
-    // is irrelevant. Why? I don't check collision on maps other than the main map. 
-    public TileMap loadOtherMaps(String filename) throws IOException {
-		// lines is a list of strings, each element is a row of the map
-		ArrayList<String> lines = new ArrayList<String>();
-		int width = 0;
-		int height = 0;
-		
-		// read in each line of the map into lines
-		Scanner reader = new Scanner(new File(filename));
-		while(reader.hasNextLine()) {
-			String line = reader.nextLine();
-			if(!line.startsWith("#")) {
-				lines.add(line);
-				width = Math.max(width, line.length());
-			}
-		}
-		height = lines.size(); // number of elements in lines is the height
-		
-		TileMap newMap = new TileMap(width, height);
-		for (int y=0; y < height; y++) {
-			String line = lines.get(y);
-			for (int x=0; x < line.length(); x++) {
-				char ch = line.charAt(x);
-				
-				if (ch == 'n') {
-					newMap.setTile(x, y, plain.get(92));
-				} else if (ch == 'm') {
-					newMap.setTile(x, y, plain.get(93));
-				} else if (ch == 'v') {
-					newMap.setTile(x, y, plain.get(90));
-				} else if (ch == 'b') {
-					newMap.setTile(x, y, plain.get(91));
-				} else if (ch == 'q') { // rock left
-					newMap.setTile(x, y, plain.get(48));
-				} else if (ch == 'w') { // rock right
-					newMap.setTile(x, y, plain.get(49));
-				} 
-			}
-		}
-		return newMap;	
 	}
     	
     // Use this to load the main map
