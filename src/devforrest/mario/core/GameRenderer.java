@@ -34,7 +34,7 @@ public class GameRenderer {
 	private ArrayList<TileMap> maps = new ArrayList<TileMap>();
 	private int lastLife = -5;
 	private DecimalFormat df2 = new DecimalFormat("#,###,###,##0.00");
-
+	private long startTime = System.currentTimeMillis();
 	// the size in bits of the tile
     private static final int TILE_SIZE = 16;
     // Math.pow(2, TILE_SIZE_BITS) == TILE_SIZE
@@ -246,12 +246,19 @@ public class GameRenderer {
         
         float dd2dec = new Float(df2.format(player.getdX())).floatValue();
 
-        g.drawString("dx: " + dd2dec, 300, 17);
+        long millis =((startTime - System.currentTimeMillis()) /1000) + 300;
+        
+        g.drawString("Time: " + millis, 300, 17);
+       
+
+
+      //  g.drawString("dx: " + dd2dec, 300, 17);
         g.setColor(Color.YELLOW);
         g.fillOval(118, 5, 12, 12); // This creates the 'coin' next to the counter
         g.setColor(Color.BLACK);
         g.drawString(""+player.getCoins(), 135, 17); // This gets the player's coin count and updates a the drawn string accordingly
         
+
         if(lastLife != player.getHealth()); {
 	        lastLife = player.getHealth();
         	Color myColor = new Color(50, 50, 50, 50);
